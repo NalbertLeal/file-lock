@@ -6,6 +6,20 @@ import (
 	"path/filepath"
 )
 
+func createPassword(password string) string {
+	const default_password = "XzFjaOhbMTHKN8Jk9rp3ulS2PLRqoEDs"
+
+	if len(password) < 32 {
+		finalPassword := password
+		for i := len(password); i < 32; i++ {
+			finalPassword += string(default_password[i])
+		}
+
+		return finalPassword
+	}
+	return password[0:32]
+}
+
 func main() {
 	if len(os.Args) != 3 {
 		fmt.Println("Pass the file name and password key to be used")
@@ -31,7 +45,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	key := []byte("N1PCdw3M2B1TfJhoaY2mL736p2vCUc47") //os.Args[2])
+	// key := []byte("N1PCdw3M2B1TfJhoaY2mL736p2vCUc47") //os.Args[2])
+	password := os.Args[2]
+	key := []byte(createPassword(password))
 	if isEncrypted(content[0:9]) {
 		contentWithNoFlag := content[9:]
 		err = decryptFileContent(path, contentWithNoFlag, key)
